@@ -1,0 +1,135 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: rgb(196, 255, 196);
+}
+
+h1 {
+    text-align:center ;
+}
+
+#game-board {
+    display: grid;
+    grid-template-areas: 
+    'tyhja tyhja tyhja hertta-pino pata-pino ruutu-pino risti-pino'
+    'pino0 pino1 pino2 pino3 pino4 pino5 pino6';
+    gap: 10px;
+}
+
+
+#maa-pino0 {
+    background-image: url(Hertta-pino.png);
+    grid-area: hertta-pino;
+}
+#maa-pino1 {
+    background-image: url(Pata-pino.png);
+    grid-area: pata-pino;
+}
+#maa-pino2 {
+    background-image: url(Ruutu-pino.png);
+    grid-area: ruutu-pino;
+}
+#maa-pino3 {
+    background-image: url(Risti-pino.png);
+    grid-area: risti-pino;
+}
+
+.pino {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 30px;
+    background-color: lightblue;
+    padding-bottom: 80px;
+}
+
+#pino0 {grid-area: pino0;}
+#pino1 {grid-area: pino1;}
+#pino2 {grid-area: pino2;}
+#pino3 {grid-area: pino3;}
+#pino4 {grid-area: pino4;}
+#pino5 {grid-area: pino5;}
+#pino6 {grid-area: pino6;}
+
+#vara-pino {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 30px;
+    background-color: lightblue;
+    padding-bottom: 80px;
+}
+
+
+.kortti {
+    width: 100px;
+    height: 150px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    margin-bottom: -50px;
+    cursor: pointer;
+    transition: transform 0.2 ease;
+}
+
+.kortti:hover {
+    transform: translateY(-10px);
+}
+
+#game-board .pino .kortti, .Hertta {
+    color: red;
+    font: bold;
+}
+#game-board .pino .kortti, .Pata {
+    color: black;
+    font: bold;
+}
+#game-board .pino .kortti, .Ruutu {
+    color: red;
+    font: bold;
+}
+#game-board .pino .kortti, .Risti {
+    color: black;
+    font: bold;
+}
+
+.selected {
+    border: 2px solid red;
+}
+
+#nosto-pino {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 30px;
+    background-color: lightblue;
+    padding-bottom: 80px;
+    position: relative;
+}
+
+.nostettu-kortti {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.maa-pino {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    height: 100px;
+    width: 150px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.maa-kortti {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
