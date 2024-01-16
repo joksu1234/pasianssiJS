@@ -195,6 +195,32 @@ function maaPinonPainaus(kohdePinoIndex) {
         renderGame();
         tarkistaVoitto();
     }
+
+    if (painettuKorttiNosto) {
+        maaIndex = maaPinot[kohdePinoIndex];
+        const siirtoPino = nostetutKortit;
+        if (painettuKorttiNosto.arvo === 1) {
+            maaIndex.push(siirtoPino.pop());
+            painettuKortti = null;
+            painettuIndex = null;
+            pinoIndex = null;
+            korttiIndex = null;
+            painettuKorttiNosto = null;
+            renderGame();
+            renderVaraPino();
+            return;
+        }
+        siirraKorttiaNostoPinostaMaaPinoon(painettuKorttiNosto, maaIndex);
+        painettuKortti = null;
+        painettuKorttiNosto = null;
+        painettuIndex = null;
+        pinoIndex = null;
+        korttiIndex = null;
+        maaIndex = null;
+        renderGame();
+        renderVaraPino();
+        tarkistaVoitto();
+    }
 }
 
 //Antaa korteille kuvat.
@@ -292,8 +318,12 @@ function siirraKorttiaMaaPinoon(painettuKortti, maaIndex) {
     }
 }
 
-function siirraKorttiaNostoPinosta() {
-    
+function siirraKorttiaNostoPinostaMaaPinoon(painettuKortti, maaIndex) {
+    const siirtoKortti = nostetutKortit;
+
+    if (tarkistaSiirtoMaaPinoon(painettuKortti, maaIndex)) {
+        maaIndex.push(siirtoKortti.pop());
+    }
 }
 
 //Fukntio, jolla liikutetaan kortteja
