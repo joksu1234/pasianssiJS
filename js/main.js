@@ -102,6 +102,13 @@ function renderGame() {
         pinoElementti.classList.add("pino");
         pinoElementti.id = `pino${pinoIndex}`;
 
+        if (painettuKortti === null) {
+            let valitutKortit = document.querySelectorAll(".selected");
+            valitutKortit.forEach(function(element) {
+                element.classList.remove("selected");
+            });
+        }
+
         if (pino.length > 0) {
             pino.forEach((kortti, korttiIndex) => {
                 const korttiElementti = luoKorttiElementti(kortti);
@@ -131,6 +138,13 @@ function renderVaraPino() {
     varaPinoElementti.innerHTML = "";
     nostoPinoElementti.innerHTML = "";
 
+    if (painettuKorttiNosto === null) {
+        let valitutKortit = document.querySelectorAll(".selected");
+        valitutKortit.forEach(function(element) {
+            element.classList.remove("selected");
+        });
+    }
+
     //Näytetään vain päälimmäinen kortti
     if (varaPino.length > 0) {
         const ylinKortti = varaPino[varaPino.length - 1];
@@ -148,6 +162,7 @@ function renderVaraPino() {
 
     for (const nostoKortti of nostetutKortit) {
         const nostettuKorttiElementti = luoKorttiElementti(nostoKortti);
+        nostettuKorttiElementti.classList.toggle("selected", painettuKorttiNosto === nostoKortti);
         nostettuKorttiElementti.classList.add("nostettu-kortti");
         nostettuKorttiElementti.addEventListener("click", () => nostoPinoPainaus(nostoKortti));
 
@@ -160,6 +175,7 @@ function nostoPinoPainaus(nostoKortti) {
     if (painettuKorttiNosto === null) {
         painettuKorttiNosto = nostetutKortit[nostetutKortit.length - 1];
         console.log(painettuKorttiNosto);
+        renderVaraPino();
     }
 }
 
@@ -253,6 +269,7 @@ function nostaKortti() {
         const ylinNostoKortti = varaPino.pop();
         ylinNostoKortti.isFaceDown = true;
         nostetutKortit.push(ylinNostoKortti);
+        painettuKorttiNosto = null;
         renderVaraPino();
     }
 }
@@ -307,6 +324,7 @@ function kortinPainaus(pinoIndex, korttiIndex) {
         siirtoPino = null;
         painettuKorttiNosto = null;
         painettuKorttiIndex = null;
+        renderGame();
     }
 }
 
@@ -364,7 +382,7 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
         alert('Et voi siirtää korttia tuohon!');
     }
     
-    renderGame();
+    
 
 }
 
