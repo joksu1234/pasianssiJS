@@ -17,6 +17,8 @@ h1 {
     'tyhja tyhja tyhja hertta-pino pata-pino ruutu-pino risti-pino'
     'pino0 pino1 pino2 pino3 pino4 pino5 pino6';
     gap: 10px;
+    justify-items: center;
+    margin: auto;
 }
 
 
@@ -71,7 +73,7 @@ h1 {
     background-position: center;
     background-size: cover;
     position: relative;
-    margin-bottom: -50px;
+    margin-bottom: -80px;
     cursor: pointer;
     transition: transform 0.2 ease;
 }
@@ -108,20 +110,20 @@ h1 {
     background-color: lightblue;
     padding-bottom: 80px;
     position: relative;
+    height: 100px;
+    width: 110px;
 }
 
 .nostettu-kortti {
     position: absolute;
-    left: 0;
-    top: 0;
 }
 
 .maa-pino {
     border: 2px solid black;
     border-radius: 5px;
-    padding: 10px;
-    height: 100px;
-    width: 150px;
+    padding: 30px;
+    height: 150px;
+    width: 110px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -130,6 +132,4 @@ h1 {
 
 .maa-kortti {
     position: absolute;
-    top: 0;
-    left: 0;
 }

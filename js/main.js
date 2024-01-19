@@ -13,6 +13,7 @@ const alaPinot = [[], [], [], [], [], [], []];
 const varaPino = [];
 const nostetutKortit = [];
 const maaPinot = [[], [], [], []]
+let korttiRyhma = [];
 let painettuKortti = null;
 let painettuKorttiNosto = null;
 let painettuIndex = null;
@@ -127,18 +128,23 @@ function renderGame() {
             pinoElementti.appendChild(tyhjaKorttiElementti);
         }
 
+        
 
         gameBoard.appendChild(pinoElementti);
     });
+    renderVaraPino();
 }
 
 function renderVaraPino() {
-    const varaPinoElementti = document.getElementById("vara-pino");
-    const nostoPinoElementti = document.getElementById("nosto-pino");
+    const gameBoard = document.getElementById("game-board");
+    const varaPinoElementti = document.createElement("div");
+    varaPinoElementti.setAttribute('id', 'vara-pino');
     varaPinoElementti.innerHTML = "";
+    const nostoPinoElementti = document.createElement("div");
+    nostoPinoElementti.setAttribute('id', 'nosto-pino');
     nostoPinoElementti.innerHTML = "";
 
-    if (painettuKorttiNosto === null) {
+    if (painettuKorttiNosto === null && painettuKortti === null) {
         let valitutKortit = document.querySelectorAll(".selected");
         valitutKortit.forEach(function(element) {
             element.classList.remove("selected");
@@ -169,13 +175,15 @@ function renderVaraPino() {
 
         nostoPinoElementti.appendChild(nostettuKorttiElementti);
     }
+    gameBoard.appendChild(varaPinoElementti);
+    gameBoard.appendChild(nostoPinoElementti);
 }
 
 function nostoPinoPainaus(nostoKortti) {
     if (painettuKorttiNosto === null) {
         painettuKorttiNosto = nostetutKortit[nostetutKortit.length - 1];
         console.log(painettuKorttiNosto);
-        renderVaraPino();
+        renderGame();
     }
 }
 
@@ -223,7 +231,6 @@ function maaPinonPainaus(kohdePinoIndex) {
             korttiIndex = null;
             painettuKorttiNosto = null;
             renderGame();
-            renderVaraPino();
             return;
         }
         siirraKorttiaNostoPinostaMaaPinoon(painettuKorttiNosto, maaIndex);
@@ -234,7 +241,6 @@ function maaPinonPainaus(kohdePinoIndex) {
         korttiIndex = null;
         maaIndex = null;
         renderGame();
-        renderVaraPino();
         tarkistaVoitto();
     }
 }
@@ -270,15 +276,20 @@ function nostaKortti() {
         ylinNostoKortti.isFaceDown = true;
         nostetutKortit.push(ylinNostoKortti);
         painettuKorttiNosto = null;
-        renderVaraPino();
+        renderGame();
     }
 }
 
 function jaaUudelleen() {
     if (varaPino.length === 0) {
+        //Käännetään kortit väärinpäin
+        for (let i = 0; i < nostetutKortit.length; i++) {
+            nostetutKortit[i].isFaceDown = false;
+        }
+        //Laitetaan nostetut kortit takaisin varapinoon
         varaPino.push(...nostetutKortit.reverse());
         nostetutKortit.length = 0;
-        renderVaraPino();
+        renderGame();
     }
 }
 
@@ -357,18 +368,24 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
         } else if (tarkistaSiirto(painettuKorttiNosto, kohdePinoIndex)) {
             kohdePino.push(siirtoPinoNosto.pop());
         }
-        renderVaraPino();
         renderGame();
         return;
     }
 
     if (kohdePino.length === 0 && painettuKortti.arvo === 13) {
+
         let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
         alaPinot[painettuIndex].push(siirrettavaKohde);
         if (siirtoPino.length > 0) {
             siirtoPino[siirtoPino.length - 1].isFaceDown = true;
         }
     } else if (tarkistaSiirto(painettuKortti, kohdePinoIndex)) {
+        //Valitaan pinosta ryhmä kortteja
+        for (let i = 0; i < alaPinot[painettuKorttiIndex].length; i++) {
+            if (alaPinot[painettuKorttiIndex][i].isFaceDown) {
+                korttiRyhma.push(i);
+            }
+        }
         let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
         alaPinot[painettuIndex].push(siirrettavaKohde);
         
@@ -496,5 +513,4 @@ renderGame();
 painausKuuntelija();
 
 jaaKortit();
-renderVaraPino();
 
