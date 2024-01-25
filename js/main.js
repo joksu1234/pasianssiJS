@@ -13,6 +13,7 @@ const alaPinot = [[], [], [], [], [], [], []];
 const varaPino = [];
 const nostetutKortit = [];
 const maaPinot = [[], [], [], []]
+let korttiRyhmaIndexit = [];
 let korttiRyhma = [];
 let painettuKortti = null;
 let painettuKorttiNosto = null;
@@ -132,6 +133,8 @@ function renderGame() {
 
         gameBoard.appendChild(pinoElementti);
     });
+    korttiRyhma = [];
+    korttiRyhmaIndexit = [];
     renderVaraPino();
 }
 
@@ -373,28 +376,45 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
     }
 
     if (kohdePino.length === 0 && painettuKortti.arvo === 13) {
+        for (let i = 0; i < siirtoPino.length; i++) {
+            if (siirtoPino[i].isFaceDown) {
+                korttiRyhmaIndexit.push(i);
+            }
+        }
+        const indexMaarat = korttiRyhmaIndexit.length;
+        for (let i = 0; i < indexMaarat; i++) {
+            let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(korttiRyhmaIndexit[0], 1)[0];
+            alaPinot[painettuIndex].push(siirrettavaKohde);
+            
+        }
 
-        let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
-        alaPinot[painettuIndex].push(siirrettavaKohde);
+        /* let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
+        alaPinot[painettuIndex].push(siirrettavaKohde); */
         if (siirtoPino.length > 0) {
             siirtoPino[siirtoPino.length - 1].isFaceDown = true;
         }
     } else if (tarkistaSiirto(painettuKortti, kohdePinoIndex)) {
-        //Valitaan pinosta ryhmä kortteja
-        for (let i = 0; i < alaPinot[painettuKorttiIndex].length; i++) {
-            if (alaPinot[painettuKorttiIndex][i].isFaceDown) {
-                korttiRyhma.push(i);
+        for (let i = 0; i < siirtoPino.length; i++) {
+            if (siirtoPino[i].isFaceDown) {
+                korttiRyhmaIndexit.push(i);
             }
         }
-        let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
-        alaPinot[painettuIndex].push(siirrettavaKohde);
+        const indexMaarat = korttiRyhmaIndexit.length;
+        for (let i = 0; i < indexMaarat; i++) {
+            let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(korttiRyhmaIndexit[0], 1)[0];
+            alaPinot[painettuIndex].push(siirrettavaKohde);
+            
+        }
+        
+        /* let siirrettavaKohde = alaPinot[painettuKorttiIndex].splice(kortinIndex, 1)[0];
+        alaPinot[painettuIndex].push(siirrettavaKohde); */
         
         //Tarkistetaan voidaanko kääntää kortti oikeinpäin.
         if (siirtoPino.length > 0) {
             siirtoPino[siirtoPino.length - 1].isFaceDown = true;
         }
 
-        renderGame();
+        
     } else {
         alert('Et voi siirtää korttia tuohon!');
     }
