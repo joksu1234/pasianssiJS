@@ -18,7 +18,8 @@ let korttiRyhma = [];
 let painettuKortti = null;
 let painettuKorttiNosto = null;
 let painettuIndex = null;
-let painettuKorttiIndex;
+let maaPinoKortti = null;
+let painettuKorttiIndex = null;
 let korttiIndex;
 let kortinIndex;
 let pinoIndex;
@@ -191,6 +192,7 @@ function nostoPinoPainaus(nostoKortti) {
 }
 
 function maaPinonPainaus(kohdePinoIndex) {
+    //Tarkistaa kortin siirron alapinosta maapinoon
     if (painettuKortti) {
         console.log("Type of maaPino:", typeof kohdePinoIndex);
         maaIndex = maaPinot[kohdePinoIndex];
@@ -206,6 +208,9 @@ function maaPinonPainaus(kohdePinoIndex) {
             pinoIndex = null;
             korttiIndex = null;
             painettuKorttiNosto = null;
+            painettuKorttiIndex = null;
+            kortinIndex = null;
+            maaPinoKortti = null;
             renderGame();
             return;
         }
@@ -214,15 +219,20 @@ function maaPinonPainaus(kohdePinoIndex) {
             siirtoPino[siirtoPino.length - 1].isFaceDown = true;
         }
         painettuKortti = null;
+        painettuKorttiIndex = null;
         painettuKorttiNosto = null;
         painettuIndex = null;
         pinoIndex = null;
         korttiIndex = null;
         maaIndex = null;
+        kortinIndex = null;
+        maaPinoKortti = null;
         renderGame();
         tarkistaVoitto();
+        return;
     }
 
+    //Tarkistaa siirron nostopinosta maapinoon
     if (painettuKorttiNosto) {
         maaIndex = maaPinot[kohdePinoIndex];
         const siirtoPino = nostetutKortit;
@@ -233,6 +243,9 @@ function maaPinonPainaus(kohdePinoIndex) {
             pinoIndex = null;
             korttiIndex = null;
             painettuKorttiNosto = null;
+            painettuKorttiIndex = null;
+            maaPinoKortti = null;
+            kortinIndex = null;
             renderGame();
             return;
         }
@@ -240,11 +253,20 @@ function maaPinonPainaus(kohdePinoIndex) {
         painettuKortti = null;
         painettuKorttiNosto = null;
         painettuIndex = null;
+        painettuKorttiIndex = null;
         pinoIndex = null;
         korttiIndex = null;
         maaIndex = null;
+        maaPinoKortti = null;
+        kortinIndex = null;
         renderGame();
         tarkistaVoitto();
+        return;
+    } else if (!painettuKortti && !painettuKorttiNosto) {
+        //Jos muita kortteja ei ole painettu, valitaan maapinon kortti.
+        maaPinoKortti = maaPinot[kohdePinoIndex];
+        console.log(painettuKortti);
+        kortinIndex = kohdePinoIndex;
     }
 }
 
@@ -319,7 +341,7 @@ function painausKuuntelija() {
 //Funktio, joka käsittelee korttien painamisen
 function kortinPainaus(pinoIndex, korttiIndex) {
     //Tarkistetaan onko ensimmäinen valittu kortti alaPinossa
-    if (painettuKortti == null && painettuKorttiNosto == null) {
+    if (painettuKortti == null && painettuKorttiNosto == null && maaPinoKortti == null) {
         painettuKortti = alaPinot[pinoIndex][korttiIndex];
         kortinIndex = korttiIndex;
         painettuIndex = pinoIndex;
@@ -338,9 +360,12 @@ function kortinPainaus(pinoIndex, korttiIndex) {
         siirtoPino = null;
         painettuKorttiNosto = null;
         painettuKorttiIndex = null;
+        maaPinoKortti = null;
         renderGame();
     }
 }
+
+
 
 function siirraKorttiaMaaPinoon(painettuKortti, maaIndex) {
     const siirtoPino = alaPinot[painettuIndex];
@@ -362,6 +387,15 @@ function siirraKorttiaNostoPinostaMaaPinoon(painettuKortti, maaIndex) {
 function siirraKorttia(painettuKortti, kohdePinoIndex) {
     const siirtoPino = alaPinot[painettuKorttiIndex];
     const kohdePino = alaPinot[painettuIndex];
+
+    if (maaPinoKortti !== null) {
+        const siirtoPinoMaa = maaPinot[kortinIndex];
+        if (tarkistaSiirto(maaPinoKortti, kohdePinoIndex)) {
+            kohdePino.push(siirtoPinoMaa.pop());
+        }
+        renderGame();
+        return;
+    }
 
     //Tarkistetaan onko siirrettävä kortti varapinossa vai alapinossa
     if (painettuKorttiNosto !== null) {
@@ -395,7 +429,7 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
         }
     } else if (tarkistaSiirto(painettuKortti, kohdePinoIndex)) {
         for (let i = 0; i < siirtoPino.length; i++) {
-            if (siirtoPino[i].isFaceDown) {
+            if (siirtoPino[i].isFaceDown && i >= kortinIndex) {
                 korttiRyhmaIndexit.push(i);
             }
         }
@@ -427,6 +461,26 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
 function tarkistaSiirto(painettuKortti) {
     const kohdePino = alaPinot[painettuIndex];
     console.log('kohdePino', kohdePino);
+
+    if (maaPinoKortti !== null) {
+        const siirtoKortti = maaPinot[kortinIndex][maaPinot[kortinIndex].length - 1];
+        const kohdeKortti = kohdePino[kohdePino.length - 1];
+        console.log('siirtoKortti', siirtoKortti);
+        console.log('kohdeKortti', kohdeKortti);
+        
+        const oikeaVariJarjestus = 
+            siirtoKortti && (
+            (siirtoKortti.maa === "Hertta" || siirtoKortti.maa === "Ruutu") &&
+            (kohdeKortti.maa === "Pata" || kohdeKortti.maa === "Risti") ||
+            (siirtoKortti.maa === "Pata" || siirtoKortti.maa === "Risti") &&
+            (kohdeKortti.maa === "Hertta" || kohdeKortti.maa === "Ruutu")
+            );
+        
+        const oikeaArvoJarjestus = 
+            siirtoKortti && Number(siirtoKortti.arvo) + 1 === Number(kohdeKortti.arvo);
+
+            return oikeaVariJarjestus && oikeaArvoJarjestus;
+    }
     
     if (painettuKorttiNosto !== null) {
 
@@ -524,6 +578,22 @@ function jaaKortit() {
     });
 
     renderGame();
+}
+
+//Debug funktio, joka tulostaa kaikki indexit ja tallennetut arvot
+function tulostaMuuttujat() {
+    console.log(
+        "painettuKortti = ", painettuKortti,
+        "painettuKorttiNosto = ", painettuKorttiNosto,
+        "painettuKorttiIndex = ", painettuKorttiIndex,
+        "painettuIndex = ", painettuIndex,
+        "korttiIndex = ", korttiIndex,
+        "kortinIndex = ", kortinIndex,
+        "kohdePinoIndex = ", kohdePinoIndex,
+        "siirtoPino = ", siirtoPino,
+        "pinoIndex = ", pinoIndex,
+        "maaPinoKortti = ", maaPinoKortti,
+        "maaIndex = ", maaIndex);
 }
 
 //Alustetaan peli
