@@ -45,6 +45,7 @@ h1 {
     padding: 30px;
     background-color: lightblue;
     padding-bottom: 80px;
+    height: 600px;
 }
 
 #pino0 {grid-area: pino0;}
@@ -73,7 +74,7 @@ h1 {
     background-position: center;
     background-size: cover;
     position: relative;
-    margin-bottom: -80px;
+    margin-bottom: -110px;
     cursor: pointer;
     transition: transform 0.2 ease;
 }
@@ -132,4 +133,8 @@ h1 {
 
 .maa-kortti {
     position: absolute;
+}
+
+#message {
+    font-size: larger;
 }

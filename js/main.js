@@ -69,6 +69,21 @@ function sekoita(pakka) {
     }
 }
 
+//Puhdistus funktio
+function clear() {
+    const gameBoard = document.getElementById("game-board");
+
+    const maaPinot = document.querySelectorAll("maa-pino");
+    const pinot = document.querySelectorAll("pino");
+    const varaPino = document.querySelector("vara-pino");
+    const nostoPino = document.querySelector("nosto-pino");
+
+    gameBoard.parentNode.removeChild(maaPinot);
+    gameBoard.parentNode.removeChild(pinot);
+    gameBoard.parentNode.removeChild(varaPino);
+    gameBoard.parentNode.removeChild(nostoPino);
+}
+
 //Funktio, jolla renderöidään peli aluetta tarvittaessa
 function renderGame() {
     const gameBoard = document.getElementById("game-board");
@@ -181,6 +196,10 @@ function renderVaraPino() {
     }
     gameBoard.appendChild(varaPinoElementti);
     gameBoard.appendChild(nostoPinoElementti);
+
+    const viestiElementti = document.createElement("span");
+    viestiElementti.setAttribute("id", "message");
+    gameBoard.appendChild(viestiElementti);
 }
 
 function nostoPinoPainaus(nostoKortti) {
@@ -450,7 +469,7 @@ function siirraKorttia(painettuKortti, kohdePinoIndex) {
 
         
     } else {
-        alert('Et voi siirtää korttia tuohon!');
+        showMessage("Et voi siirtää korttia tuohon!", 2000);
     }
     
     
@@ -578,6 +597,16 @@ function jaaKortit() {
     });
 
     renderGame();
+}
+
+//Funktio viestien näyttämiseen. (On paljon mukavempaa, kun ei tarvitse painaa viestiä pois "alert")
+function showMessage(viesti, aika) {
+    const viestiConst = document.getElementById("message");
+    viestiConst.innerHTML = viesti;
+    
+    setTimeout(function() {
+        viestiConst.innerHTML = "";
+    }, aika);
 }
 
 //Debug funktio, joka tulostaa kaikki indexit ja tallennetut arvot
